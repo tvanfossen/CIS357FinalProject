@@ -3,17 +3,17 @@ package td.warp.com.warptd;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class CharacterSprite{
+public class BuildingSprite {
 
     private Bitmap image;
     private int x, y;
 
-    public CharacterSprite(Bitmap bmp, int x, int y) {
+    public BuildingSprite(Bitmap bmp, int x, int y) {
 
         image = bmp;
 
-        x = 100;
-        y = 100;
+        this.x = x;
+        this.y = y;
     }
 
     public void draw(Canvas canvas) {
@@ -24,5 +24,4 @@ public class CharacterSprite{
     {
         y++;
     }
-
 }
