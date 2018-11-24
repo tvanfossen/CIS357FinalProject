@@ -22,7 +22,7 @@ public class CharacterSprite{
 
     public void update()
     {
-        y++;
+        ;
     }
 
 }

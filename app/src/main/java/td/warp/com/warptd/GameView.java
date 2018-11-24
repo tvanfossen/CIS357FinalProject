@@ -19,7 +19,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private Bitmap bg;
     private int gameBoard [][];
     private List<BuildingSprite> buildingList;
+    private List<CharacterSprite> characterList;
     private int blockHeight, blockWidth;
+
+
 
     public GameView(Context context, int height, int width) {
         super(context);
@@ -30,15 +33,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         setFocusable(true);
 
         this.width = width;
-        this.height = height;
+        this.height = height - 200;
 
-
-        Bitmap yourBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_1);
         Bitmap resized = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_1), 50, 50, true);
 
         blockHeight = resized.getHeight();
         blockWidth = resized.getWidth();
-
     }
 
 
@@ -55,28 +55,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
                 if (val == 0)
                 {
-                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_1), 50, 50, true),
+                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_1), blockWidth, blockHeight, true),
                             i*blockWidth, j*blockHeight, null);
 
                 }
                 else if (val == 1)
                 {
-                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_2), 50, 50, true),
+                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_2), blockWidth, blockHeight, true),
                             i*blockWidth, j*blockHeight, null);
                 }
                 else if (val == 2)
                 {
-                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_3), 50, 50, true),
+                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_3), blockWidth, blockHeight, true),
                             i*blockWidth, j*blockHeight, null);
                 }
                 else if (val == 3)
                 {
-                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_4), 50, 50, true),
+                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_4), blockWidth, blockHeight, true),
                             i*blockWidth, j*blockHeight, null);
                 }
                 else if (val == 4)
                 {
-                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_5), 50, 50, true),
+                    temp.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_5), blockWidth, blockHeight, true),
                             i*blockWidth, j*blockHeight, null);
                 }
 
@@ -110,17 +110,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
                     if (val2 == 0)
                     {
-                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_1), 50, 50, true),
+                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_2), blockWidth, blockHeight, true),
                                 i*blockWidth, j*blockHeight));
                     }
                     else if (val2 == 1)
                     {
-                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_2), 50, 50, true),
+                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_2), blockWidth, blockHeight, true),
                                 i*blockWidth, j*blockHeight));
                     }
                     else if (val2 == 2)
                     {
-                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_3), 50, 50, true),
+                        buildingList.add(new BuildingSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.building_3), blockWidth, blockHeight, true),
                                 i*blockWidth, j*blockHeight));
                     }
                 }
@@ -135,7 +135,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
         return tempBoard;
     }
-
 
 
     public void update() {
@@ -159,6 +158,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
         bg = generateBackground();
         gameBoard = generateStartingBoard();
+
     }
 
     @Override
