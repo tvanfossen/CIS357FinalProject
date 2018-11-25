@@ -14,4 +14,8 @@
         completions."
     </string>
     <string name="title_activity_sign_up">Sign in</string>
+
+    <string name="facebook_app_id">198413144413826</string>
+    <string name="fb_login_protocol_scheme">fb198413144413826</string>
+
 </resources>
