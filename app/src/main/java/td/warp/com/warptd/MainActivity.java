@@ -36,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
             String name = user.getDisplayName();
             String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
-            headerText.setText("Welcome " + name);
+            if (name != null)
+                headerText.setText("Welcome " + name);
+            else
+                headerText.setText("Welcome " + email);
 
 
             // Check if user's email is verified
