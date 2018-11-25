@@ -36,6 +36,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -77,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private FirebaseAuth mAuth;
 
+
     private static final String TAG2 = "FACELOG";
 
     private CallbackManager mCallbackManager;
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
 
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -106,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Intent main = new Intent(getApplicationContext(), MainActivity.class);
             main.putExtra("uid", user);
             startActivity(main);
+
 
         } else {
 
