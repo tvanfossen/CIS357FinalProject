@@ -20,8 +20,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private int gameBoard [][];
     private List<BuildingSprite> buildingList;
     private List<CharacterSprite> characterList;
+    private List<ZombieSprite> zombieList;
+    private WarpEngineSprite warpEngine;
     private int blockHeight, blockWidth;
-
+    private int maxZombies;
+    private int warpX, warpY;
+    private boolean mapHasChanged = false;
 
 
     public GameView(Context context, int height, int width) {
@@ -32,13 +36,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
 
-        this.width = width;
-        this.height = height - 200;
 
-        Bitmap resized = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ground_tile_1), 50, 50, true);
 
-        blockHeight = resized.getHeight();
-        blockWidth = resized.getWidth();
     }
 
 
@@ -100,7 +99,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
                 Random rand = new Random();
                 int val = rand.nextInt(10);
 
-                if (val == 0)
+                if (val == 0 && tempBoard[i][j] == 0)
                 {
                     tempBoard[i][j] = 1;
 
@@ -128,6 +127,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     tempBoard[i][j] = 0;
                 }
+
+
             }
         }
 
@@ -136,12 +137,48 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         return tempBoard;
     }
 
+    public void generateZombies()
+    {
+        Random rand = new Random();
+
+        while (zombieList.size() < maxZombies)
+        {
+            int x = rand.nextInt(this.width/blockWidth);
+            int y = rand.nextInt(this.height/blockHeight);
+
+            if (gameBoard[x][y] == 0) {
+                zombieList.add(new ZombieSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.zombie_1),
+                        blockWidth, blockHeight, true), x*blockWidth, y*blockHeight, blockWidth, blockHeight, gameBoard, height, width, warpX, warpY));
+                gameBoard[x][y] = 1;
+            }
+        }
+    }
+
+    public void generateWarpEngine()
+    {
+        Random rand = new Random();
+
+        warpX = rand.nextInt(this.width/blockWidth);
+        warpY = rand.nextInt(this.height/blockHeight);
+        warpEngine = new WarpEngineSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.warpengine), blockWidth, blockHeight, true),
+                warpX*blockWidth, warpY*blockHeight);
+
+        gameBoard[warpX][warpY] = 0;
+    }
 
     public void update() {
         // ADD IN ACCELEROMTER CODER
         // PASS UPDATES TO BUILDING BASED ON ACCELEROMTER READ IF WARP IS ENABLED
         //
         //
+
+        for (ZombieSprite zombie : zombieList)
+        {
+            if (zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, mapHasChanged) == -1)
+            {
+                zombieList.remove(zombie);
+            }
+        }
     }
 
     @Override
@@ -154,10 +191,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         thread.setRunning(true);
         thread.start();
 
+        this.width = getWidth();
+        this.height = getHeight()-400;
+
+        blockHeight = this.width/20;
+        blockWidth = this.width/20;
+
         buildingList = new ArrayList<BuildingSprite>();
+        characterList = new ArrayList<CharacterSprite>();
+        zombieList = new ArrayList<ZombieSprite>();
+
+        maxZombies = 150;
 
         bg = generateBackground();
         gameBoard = generateStartingBoard();
+        generateWarpEngine();
+        generateZombies();
+
+
 
     }
 
@@ -185,6 +236,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
             {
                 i.draw(canvas);
             }
+
+            for (ZombieSprite i : zombieList)
+            {
+                i.draw(canvas);
+            }
+
+            warpEngine.draw(canvas);
         }
     }
 

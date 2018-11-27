@@ -3,12 +3,11 @@ package td.warp.com.warptd;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class CharacterSprite{
-
+public class WarpEngineSprite {
     private Bitmap image;
     private int x, y;
 
-    public CharacterSprite(Bitmap bmp, int x, int y) {
+    public WarpEngineSprite(Bitmap bmp, int x, int y) {
 
         image = bmp;
 
@@ -24,5 +23,4 @@ public class CharacterSprite{
     {
         ;
     }
-
 }
