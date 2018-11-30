@@ -11,15 +11,16 @@ import java.util.Stack;
 
 public class ZombieSprite
 {
-    private Bitmap image;
-    private int x, y;
+    public Bitmap image;
+    public int x, y;
     private int blockWidth, blockHeight;
     private int weightedBoard[][];
     private Queue<Pair<String, Integer>> pathQueue;
     private Pair<String, Integer> nextMove;
     private int updateCount;
-
-
+    private int speed;
+    public int health;
+    private int width, height;
 
     public ZombieSprite(Bitmap bmp, int x, int y, int blockWidth, int blockHeight, int board[][], int height, int width, int targetX, int targetY) {
 
@@ -30,6 +31,12 @@ public class ZombieSprite
         this.blockWidth = blockWidth;
         this.blockHeight = blockHeight;
         this.pathQueue = new LinkedList<>();
+        this.width = width;
+        this.height = height;
+        Random rand = new Random();
+        speed = rand.nextInt(90) + 15;
+        health = rand.nextInt(50) + 50;
+
 
         pathfinder(this.x/blockWidth, this.y/blockHeight, targetX, targetY, board, width/blockWidth, height/blockHeight);
         if (!pathQueue.isEmpty())
@@ -47,13 +54,19 @@ public class ZombieSprite
     {
         if (mapHasChanged)
         {
-
+            pathfinder(this.x/blockWidth, this.y/blockHeight, targetX, targetY, board, width/blockWidth, height/blockHeight);
+            if (!pathQueue.isEmpty())
+            {
+                nextMove = pathQueue.remove();
+            }
         }
         else if (!mapHasChanged)
         {
-            if (updateCount == 5)
+
+            if (updateCount == speed)
             {
-                if (pathQueue.isEmpty())
+
+                if (pathQueue.isEmpty() || (x < targetX + blockWidth && x > targetX - blockWidth && y < targetY + blockHeight && y > targetY + blockHeight))
                 {
                     return -1;
                 }
