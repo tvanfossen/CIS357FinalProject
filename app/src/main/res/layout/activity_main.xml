@@ -9,6 +9,31 @@
     tools:context=".MainActivity">
 
 
+    <TextView
+        android:id="@+id/txtDMGCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Cost"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/listStats"
+        app:layout_constraintTop_toBottomOf="@+id/txtStrength" />
+
+    <Button
+        android:id="@+id/btnRange"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/common_google_signin_btn_text_light_pressed"
+        android:text="+"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtRange" />
+
     <Button
         android:id="@+id/gameButton"
         android:layout_width="101dp"
@@ -112,10 +137,61 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Upgrades"
+        android:text="Tower upgrades"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtWelcome" />
+
+    <TextView
+        android:id="@+id/txtStrength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="DMG:"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/listStats"
+        app:layout_constraintTop_toTopOf="@+id/listStats" />
+
+    <TextView
+        android:id="@+id/txtRange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Range:"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/listStats"
+        app:layout_constraintTop_toBottomOf="@+id/txtDMGCost" />
+
+    <Button
+        android:id="@+id/btnDMG"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/common_google_signin_btn_text_light_pressed"
+        android:text="+"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtStrength" />
+
+    <TextView
+        android:id="@+id/txtRangeCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Cost"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/listStats"
+        app:layout_constraintTop_toBottomOf="@+id/txtRange" />
 </android.support.constraint.ConstraintLayout>

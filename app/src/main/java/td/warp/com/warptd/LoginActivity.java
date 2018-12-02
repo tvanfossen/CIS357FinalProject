@@ -125,8 +125,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             newUser.put("strength", "10");
             newUser.put("email", authorizedUser.getEmail());
             newUser.put("kills", "732");
-            newUser.put("biomass", "0");
-            newUser.put("warps", "0");
+            newUser.put("biomass", "530");
+            newUser.put("warps", "4");
             newUser.put("gamesPlayed", "10");
             newUser.put("wins", "7");
 

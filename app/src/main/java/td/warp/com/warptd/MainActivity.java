@@ -2,6 +2,7 @@ package td.warp.com.warptd;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,14 +13,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +34,20 @@ public class MainActivity extends AppCompatActivity {
     public Button gameButton;
     public Button signOutButton;
     public TextView headerText;
+    private TextView txtDMGCost;
+    private TextView txtRangeCost;
+    private TextView txtDMG;
+    private TextView txtRange;
+    private Button btnRange;
+    private Button btnDMG;
     private FirebaseAuth mAuth;
     private RecyclerView listStats;
     private RecyclerView listAchievements;
     private FirebaseFirestore mFirestore;
+    int mBioMass = 0;
+
+    private int rangeCost = 0;
+    private int dmgCost = 0;
 
     private UserInfo mUser;
     private Tower mTower;
@@ -45,11 +57,22 @@ public class MainActivity extends AppCompatActivity {
     private UserStatsAdapter userStatsAdapter;
     private AchievementsAdapter achievementsAdapter;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
+        txtDMG = (TextView) findViewById(R.id.txtStrength);
+        txtDMGCost = (TextView) findViewById(R.id.txtDMGCost);
+        txtRange = (TextView) findViewById(R.id.txtRange);
+        txtRangeCost = (TextView) findViewById(R.id.txtRangeCost);
+        btnRange = (Button) findViewById(R.id.btnRange);
+        btnDMG = (Button) findViewById(R.id.btnDMG);
+
 
         /* Adding Firestore and recycler view stuff */
         userInfo = new ArrayList<>();
@@ -66,6 +89,29 @@ public class MainActivity extends AppCompatActivity {
         listAchievements.setHasFixedSize(true);
         listAchievements.setLayoutManager(new LinearLayoutManager(this));
         listAchievements.setAdapter(achievementsAdapter);
+
+        btnDMG.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                UserInfo user = userInfo.get(0);
+                if(mBioMass > dmgCost) {
+                    user.setBiomass(mBioMass - dmgCost);
+                    mTower.strength++;
+                }
+                updateUserInfo();
+            }
+        });
+
+
+        btnRange.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                UserInfo user = userInfo.get(0);
+                if(mBioMass > rangeCost) {
+                    user.setBiomass(mBioMass - rangeCost);
+                    mTower.range++;
+                }
+                updateUserInfo();
+            }
+        });
 
 
 
@@ -88,12 +134,14 @@ public class MainActivity extends AppCompatActivity {
                 int wins = Integer.parseInt(documentSnapshot.getString("wins"));
                 int gamesPlayed = Integer.parseInt(documentSnapshot.getString("gamesPlayed"));
 
+                mBioMass = biomass;
 
                 mTower = new Tower(range, strength);
                 mUser = new UserInfo(email,biomass,kills,warps,wins,gamesPlayed);
                 userInfo.add(mUser);
 
                 populateAchievements();
+                populateUpgrades();
 
                 userStatsAdapter.notifyDataSetChanged();
                 achievementsAdapter.notifyDataSetChanged();
@@ -116,11 +164,14 @@ public class MainActivity extends AppCompatActivity {
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
             String email = user.getEmail();
+
             Uri photoUrl = user.getPhotoUrl();
-            if (name != null)
+            if (name != "" && name!= null)
                 headerText.setText("Welcome " + name);
-            else
+            else if (email != null)
                 headerText.setText("Welcome " + email);
+            else
+                headerText.setText(("Welcome!"));
 
 
             // Check if user's email is verified
@@ -152,8 +203,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void purchaseDamage() {
+        UserInfo user = userInfo.get(0);
+        if(mBioMass > dmgCost) {
+            user.setBiomass(mBioMass - dmgCost);
+            mTower.strength++;
+        }
+//        updateUserInfo();
+        return;
+    }
+
     private void populateAchievements(){
         UserInfo user = userInfo.get(0);
+        achievements.clear();
 
         int kills = user.getKills();
         int wins = user.getWins();
@@ -163,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < kills; i++){
             int level = i / 100;
 
-            if (i % 100 == 0){
+            if (i % 100 == 0 && i > 0){
                 String name = "Zombie Slayer " + level;
                 String description = "Killed " + i + " zombies";
                 Achievement a = new Achievement(name, description);
@@ -172,5 +234,100 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    private void populateUpgrades() {
+        rangeCost = mTower.range * 5;
+        dmgCost = mTower.strength * 5;
+
+
+        txtDMG.setText("DMG: " + mTower.strength);
+        txtRange.setText("Range: " + mTower.range);
+
+        txtDMGCost.setText("Cost: " + dmgCost);
+        txtRangeCost.setText("Cost: " + rangeCost);
+    }
+
+    private void updateUserInfo(){
+        UserInfo user = userInfo.get(0);
+        DocumentReference userRef = mFirestore.collection("users").document(mAuth.getUid());
+
+        // updating biomass
+        userRef
+                .update("biomass", Integer.toString(user.getBiomass()))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        userRef
+                .update("strength", Integer.toString(mTower.strength))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        userRef
+                .update("range", Integer.toString(mTower.range))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        //updating games played
+//        userRef
+//                .update("gamesPlayed", "" + user.getGamesPlayed())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error updating document", e);
+//                    }
+//                });
+//
+//        //updating kills
+//        userRef
+//                .update("kills", "" + user.getKills())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error updating document", e);
+//                    }
+//                });
     }
 }
