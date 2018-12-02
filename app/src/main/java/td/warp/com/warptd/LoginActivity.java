@@ -40,6 +40,8 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -48,10 +50,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -80,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     private static final String TAG2 = "FACELOG";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private CallbackManager mCallbackManager;
 
@@ -108,6 +115,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         showProgress(false);
         if (user != null) {
 
+
+            FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
+            Map<String, Object> newUser = new HashMap<>();
+            Map<String, Object> newTower = new HashMap<>();
+
+
+            newUser.put("range", "10");
+            newUser.put("strength", "10");
+            newUser.put("email", authorizedUser.getEmail());
+            newUser.put("kills", "732");
+            newUser.put("biomass", "0");
+            newUser.put("warps", "0");
+            newUser.put("gamesPlayed", "10");
+            newUser.put("wins", "7");
+
+
+            db.collection("users").document(authorizedUser.getUid())
+                    .set(newUser)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot added");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+
+
             Intent main = new Intent(getApplicationContext(), MainActivity.class);
             main.putExtra("uid", user);
             startActivity(main);
@@ -121,6 +160,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
+
+                                FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
+                                Map<String, Object> newUser = new HashMap<>();
+                                newUser.put("email", authorizedUser.getEmail());
+                                newUser.put("kills", 0);
+                                newUser.put("corpses harvested", 0);
+
+                                db.collection("users")
+                                        .add(newUser)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error adding document", e);
+                                            }
+                                        });
+
+
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 updateUI(user);
@@ -322,6 +384,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+
+                                FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if (isNew){
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("email", authorizedUser.getEmail());
+                                    user.put("kills", 0);
+                                    user.put("corpses harvested", 0);
+
+                                    db.collection("users")
+                                            .add(user)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
+
+                                }
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
