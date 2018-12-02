@@ -35,7 +35,7 @@ public class UserStatsAdapter extends RecyclerView.Adapter<UserStatsAdapter.View
         viewHolder.mWins.setText("Wins: " + usersList.get(i).getWins());
 
         double ratio = (usersList.get(i).getWins() * 1.0) / usersList.get(i).getGamesPlayed();
-        viewHolder.mRatio.setText("Warps: " + ratio);
+        viewHolder.mRatio.setText("W/L ratio: " + ratio);
     }
 
     @Override
