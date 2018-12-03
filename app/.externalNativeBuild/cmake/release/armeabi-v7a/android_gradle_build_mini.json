@@ -1,16 +1,16 @@
 {
   "buildFiles": [
-    "/Users/jonnyd_went/warpZombie/CIS357FinalProject/app/CMakeLists.txt"
+    "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/CMakeLists.txt"
   ],
   "cleanCommands": [
-    "/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/warpZombie/CIS357FinalProject/app/.externalNativeBuild/cmake/release/armeabi-v7a --target clean"
+    "/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/.externalNativeBuild/cmake/release/armeabi-v7a --target clean"
   ],
   "libraries": {
     "native-lib-Release-armeabi-v7a": {
       "artifactName": "native-lib",
-      "buildCommand": "/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/warpZombie/CIS357FinalProject/app/.externalNativeBuild/cmake/release/armeabi-v7a --target native-lib",
+      "buildCommand": "/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/.externalNativeBuild/cmake/release/armeabi-v7a --target native-lib",
       "abi": "armeabi-v7a",
-      "output": "/Users/jonnyd_went/warpZombie/CIS357FinalProject/app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so"
+      "output": "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so"
     }
   }
 }

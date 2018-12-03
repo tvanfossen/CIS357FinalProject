@@ -1,3 +1,3 @@
-/Users/jonnyd_went/warpZombie/CIS357FinalProject/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/jonnyd_went/warpZombie/CIS357FinalProject/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
-/Users/jonnyd_went/warpZombie/CIS357FinalProject/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/native-lib.dir
+/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject-firstMergeAttempt/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/native-lib.dir

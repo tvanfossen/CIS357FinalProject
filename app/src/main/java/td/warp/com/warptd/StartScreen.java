@@ -21,7 +21,6 @@ public class StartScreen extends AppCompatActivity {
         setContentView(R.layout.activity_start_screen);
 
         logo = findViewById(R.id.start_screen);
-        logo.setImageResource(R.drawable.baseportal);
 
 
         Intent login = new Intent(getApplicationContext(), LoginActivity.class);

@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class GameActivity extends Activity {
@@ -21,6 +22,7 @@ public class GameActivity extends Activity {
     private Button ability3;
     private TabLayout tabLayout;
     private Context context;
+    public ProgressBar warpBar;
 
 
 
@@ -51,37 +53,216 @@ public class GameActivity extends Activity {
         ability1 = findViewById(R.id.ability1);
         ability2 = findViewById(R.id.ability2);
         ability3 = findViewById(R.id.ability3);
+        warpBar = findViewById(R.id.warpBar);
+        warpBar.setProgress(0);
+
+
+        ability1.setText("Collect Bodies 1");
+        ability2.setText("Return 1");
+        ability3.setText("Black Hole");
+        // Add cooldowns to abilities
+        ability1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(context, "Touch map to begin " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                gv.thread.paused = true;
+                gv.abilityPress = true;
+                gv.abilityCalled = ability1.getText().toString();
+
+                warpBar.setProgress(gv.bodies);
+
+            }
+        });
+
+        ability2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(context, "Touch map to begin " + ability2.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                gv.thread.paused = true;
+                gv.abilityPress = true;
+                gv.abilityCalled = ability2.getText().toString();
+            }
+        });
+
+        ability3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(context, "Touch map to begin " + ability3.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                gv.thread.paused = true;
+                gv.abilityPress = true;
+                gv.abilityCalled = ability3.getText().toString();
+            }
+        });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                System.out.println("STATE CHECK: " + position);
                 if (position == 0)
                 {
+                    ability1.setText("Collect Bodies 1");
+                    ability2.setText("Return 1");
+                    ability3.setText("Black Hole");
+                    // Add cooldowns to abilities
+                    ability1.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
 
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability1.getText().toString();
+
+                            warpBar.setProgress(gv.bodies);
+
+                        }
+                    });
+
+                    ability2.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability2.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability2.getText().toString();
+                        }
+                    });
+
+                    ability3.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability3.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability3.getText().toString();
+                        }
+                    });
                 }
                 else if (position == 1)
                 {
+                    ability1.setText("Collect Bodies 2");
+                    ability2.setText("Return 2");
+                    ability3.setText("Warp Hammer");
+                    // Add cooldowns to abilities
+                    ability1.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
 
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability1.getText().toString();
+
+                            warpBar.setProgress(gv.bodies);
+
+                        }
+                    });
+
+                    ability2.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability2.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability2.getText().toString();
+                        }
+                    });
+
+                    ability3.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability3.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability3.getText().toString();
+                        }
+                    });
                 }
                 else if (position == 2)
                 {
-
-                }
-                else if (position == 3)
-                {
-
-                }
-                else if (position == 4)
-                {
-                    ability1.setText("Stasis");
-                    ability2.setText("Black Hole");
+                    ability1.setText("Collect Bodies 3");
+                    ability2.setText("Return 3");
                     ability3.setText("Gravity Shift");
                     // Add cooldowns to abilities
                     ability1.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             Toast.makeText(context, "Touch map to begin " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability1.getText().toString();
+
+                            warpBar.setProgress(gv.bodies);
+
+                        }
+                    });
+
+                    ability2.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability2.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability2.getText().toString();
+                        }
+                    });
+
+                    ability3.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability3.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability3.getText().toString();
+                        }
+                    });
+                }
+                else if (position == 3)
+                {
+                    ability1.setText("Collect Bodies 4");
+                    ability2.setText("Return 4");
+                    ability3.setText("Stasis");
+                    // Add cooldowns to abilities
+                    ability1.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability1.getText().toString();
+
+                            warpBar.setProgress(gv.bodies);
+
+                        }
+                    });
+
+                    ability2.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability2.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability2.getText().toString();
+                        }
+                    });
+
+                    ability3.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Touch map to begin " + ability3.getText().toString() , Toast.LENGTH_SHORT).show();
+
+                            gv.thread.paused = true;
+                            gv.abilityPress = true;
+                            gv.abilityCalled = ability3.getText().toString();
+                        }
+                    });
+                }
+                else if (position == 4)
+                {
+                    ability1.setText("Warp Hammer");
+                    ability2.setText("Black Hole");
+                    ability3.setText("Gravity Shift");
+                    // Add cooldowns to abilities
+                    ability1.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(context, "Lift phone, and then hammer down to start " + ability1.getText().toString() , Toast.LENGTH_SHORT).show();
 
                             gv.thread.paused = true;
                             gv.abilityPress = true;

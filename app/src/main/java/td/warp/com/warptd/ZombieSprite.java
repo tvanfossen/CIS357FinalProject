@@ -52,42 +52,69 @@ public class ZombieSprite
 
     public int update(int board[][], int targetX, int targetY, int boardWidth, int boardHeight, boolean mapHasChanged)
     {
-        if (mapHasChanged)
+        if (health > 0)
         {
-            pathfinder(this.x/blockWidth, this.y/blockHeight, targetX, targetY, board, width/blockWidth, height/blockHeight);
-            if (!pathQueue.isEmpty())
+            if (mapHasChanged)
             {
-                nextMove = pathQueue.remove();
+                pathQueue.clear();
+                pathfinder(this.x/blockWidth, this.y/blockHeight, targetX, targetY, board, width/blockWidth, height/blockHeight);
+                if (!pathQueue.isEmpty())
+                {
+                    nextMove = pathQueue.remove();
+                }
+                if (updateCount == speed)
+                {
+                    updateCount = 0;
+
+                    if (pathQueue.isEmpty() || (x < targetX + blockWidth && x > targetX - blockWidth && y < targetY + blockHeight && y > targetY + blockHeight))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        if (nextMove.first.equals("x"))
+                        {
+                            this.x += -nextMove.second * blockWidth;
+                            nextMove = pathQueue.remove();
+                        }
+                        else if (nextMove.first.equals("y"))
+                        {
+                            this.y += -nextMove.second * blockHeight;
+                            nextMove = pathQueue.remove();
+                        }
+                    }
+                }
+            }
+            else if (!mapHasChanged)
+            {
+
+                if (updateCount == speed)
+                {
+                    updateCount = 0;
+
+                    if (pathQueue.isEmpty() || (x < targetX + blockWidth && x > targetX - blockWidth && y < targetY + blockHeight && y > targetY + blockHeight))
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        if (nextMove.first.equals("x"))
+                        {
+                            this.x += -nextMove.second * blockWidth;
+                            nextMove = pathQueue.remove();
+                        }
+                        else if (nextMove.first.equals("y"))
+                        {
+                            this.y += -nextMove.second * blockHeight;
+                            nextMove = pathQueue.remove();
+                        }
+                    }
+                }
             }
         }
-        else if (!mapHasChanged)
-        {
 
-            if (updateCount == speed)
-            {
+        updateCount ++;
 
-                if (pathQueue.isEmpty() || (x < targetX + blockWidth && x > targetX - blockWidth && y < targetY + blockHeight && y > targetY + blockHeight))
-                {
-                    return -1;
-                }
-                else
-                {
-                    if (nextMove.first.equals("x"))
-                    {
-                        this.x += -nextMove.second * blockWidth;
-                        updateCount = 0;
-                        nextMove = pathQueue.remove();
-                    }
-                    else if (nextMove.first.equals("y"))
-                    {
-                        this.y += -nextMove.second * blockHeight;
-                        updateCount = 0;
-                        nextMove = pathQueue.remove();
-                    }
-                }
-            }
-            updateCount ++;
-        }
         return 1;
     }
 
