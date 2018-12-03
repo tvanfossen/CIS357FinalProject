@@ -1,6 +1,8 @@
 package td.warp.com.warptd;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,14 +15,18 @@ public class Ability {
     public int ttl;
     public int lifetime = 0;
     public int strength;
+    public Bitmap image;
+    public int range;
 
-    public Ability(String name, int x, int y, int strength, GameView parent)
+    public Ability(Bitmap bmp, String name, int x, int y, int strength, int range, GameView parent)
     {
         this.ttl = ttl;
         this.name = name;
         this.x = x;
         this.y = y;
         this.strength = strength;
+        this.image = bmp;
+        this.range = range;
 
         switch (name)
         {
@@ -28,10 +34,18 @@ public class Ability {
                 ttl = 30*5;
                 break;
             case "Black Hole":
-                ttl=30*5;
+                ttl=1*1;
+                break;
+            default:
+                ttl=30*1;
                 break;
         }
     }
+
+    public void draw(Canvas canvas) {
+        canvas.drawBitmap(image, x, y, null);
+    }
+
 
     public void update()
     {

@@ -15,13 +15,14 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback
+public class GameView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener
 {
     public MainThread thread;
     private int height, width;
@@ -36,10 +37,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private int maxZombies;
     private int warpX, warpY;
     private boolean mapHasChanged = false;
-    public String abilityCalled;
+    public String abilityCalled = "";
     public float gravX, gravY, gravZ;
     public boolean abilityPress = false;
     public Context context;
+    public ProgressBar warpBar;
+    public int bodies = 0;
+    private SensorManager sensorManager;
+    private boolean hammerTrigger;
 
 
     public GameView(Context context, int height, int width, SensorManager sensorManager) {
@@ -47,29 +52,49 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         this.context = context;
 
         getHolder().addCallback(this);
-
+        this.sensorManager = sensorManager;
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        sensorManager.registerListener(new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-
-                gravX = event.values[0];
-                gravY = event.values[1];
-                gravZ = event.values[2];
-
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            }
-
-        }, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor , SensorManager.SENSOR_DELAY_NORMAL);
 
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        gravX = event.values[0];
+        gravY = event.values[1];
+        gravZ = event.values[2];
+
+
+        if (abilityCalled.equals("Warp Hammer") && abilityPress)
+        {
+            if (gravZ < 0) //Lift
+            {
+                hammerTrigger = true;
+            }
+            if (hammerTrigger && gravZ > 9.8 ) //and slam
+            {
+                int maxGravZ = (int)gravZ;
+                hammerTrigger = false;
+
+                Random rand = new Random();
+                int rx = rand.nextInt(width/blockWidth)*blockWidth;
+                int ry = rand.nextInt(height/blockHeight)*blockHeight;
+
+                abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.warp_hammer), 2*blockWidth, 2*blockHeight, true),
+                        abilityCalled, rx, ry, (int)maxGravZ * 15, 3, this));
+
+                abilityPress = false;
+                thread.paused = false;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 
     public Bitmap generateBackground()
     { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
@@ -188,82 +213,205 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     public void generateWarpEngine()
     {
         Random rand = new Random();
+        List<BuildingSprite> removalList = new ArrayList<>();
+        for (BuildingSprite building : buildingList)
+        {
+            if (building.x/blockWidth + 1 == warpX + 1 || building.x/blockWidth - 1 == warpX - 1 ||
+                building.y/blockHeight + 1 == warpY + 1 || building.y/blockHeight - 1 == warpY - 1)
+            {
+                removalList.add(building);
+            }
+        }
+        buildingList.removeAll(removalList);
 
-        warpX = rand.nextInt(this.width/blockWidth);
-        warpY = rand.nextInt(this.height/blockHeight);
+        warpX = rand.nextInt((this.width/blockWidth)-4)+2;
+        warpY = rand.nextInt((this.height/blockHeight)-4)+2;
         warpEngine = new WarpEngineSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.warpengine), blockWidth, blockHeight, true),
                 warpX*blockWidth, warpY*blockHeight);
 
         gameBoard[warpX][warpY] = 0;
     }
 
+    public void generateCharacters()
+    {
+
+        gameBoard[warpX + 1][warpY] = 0;
+        gameBoard[warpX - 1][warpY] = 0;
+        gameBoard[warpX][warpY + 1] = 0;
+        gameBoard[warpX][warpY - 1] = 0;
+
+        characterList.add(new CharacterSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.character_1), blockWidth, blockHeight, true),
+                (warpX + 1)*blockWidth, (warpY)*blockHeight,1, blockWidth, blockHeight));
+        characterList.add(new CharacterSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.character_1), blockWidth, blockHeight, true),
+                (warpX - 1)*blockWidth, (warpY)*blockHeight, 2, blockWidth, blockHeight));
+        characterList.add(new CharacterSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.character_1), blockWidth, blockHeight, true),
+                (warpX)*blockWidth, (warpY + 1)*blockHeight,3, blockWidth, blockHeight));
+        characterList.add(new CharacterSprite(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.character_1), blockWidth, blockHeight, true),
+                (warpX)*blockWidth, (warpY - 1)*blockHeight, 4, blockWidth, blockHeight));
+    }
+
 
     public void update() {
-        for (ZombieSprite zombie : zombieList)
+
+//
+//        for (CharacterSprite character : characterList)
+//        {
+//            character.update(gameBoard,mapHasChanged, abilityList, warpX, warpY);
+//        }
+
+        if (abilityList.isEmpty())
         {
-            if (zombie.health < 0)
+            for (ZombieSprite zombie : zombieList)
             {
-                zombie.image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.splatter_1),
-                        blockWidth, blockHeight, true);
-                continue;
-            }
-            if (zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, mapHasChanged) == -1)
-            {
-                zombieList.remove(zombie);
-                continue;
-            }
-            generateZombies();
-
-        }
-
-        System.out.println("SPOTCHECK: " + gravX + " : " + gravY);
-
-        for (Ability ability: abilityList)
-        {
-            ability.update();
-            if (ability.lifetime > ability.ttl)
-            {
-                abilityList.remove(ability);
-                continue;
-            }
-            else
-            {
-
-                for (ZombieSprite zombie : zombieList)
+                if (zombie.health < 0)
                 {
-                    if (ability.name.equals("Stasis"))
+                    zombie.image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.splatter_1),
+                            blockWidth, blockHeight, true);
+                }
+                if (zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, mapHasChanged) == -1)
+                {
+                    zombieList.remove(zombie);
+                }
+                generateZombies();
+            }
+        }
+        else
+        {
+            for (Ability ability: abilityList)
+            {
+                ability.update();
+                if (ability.lifetime > ability.ttl)
+                {
+                    abilityList.remove(ability);
+                }
+                else
+                {
+
+                    for (BuildingSprite building : buildingList)
                     {
-                        if (zombie.x < ability.x + blockWidth*ability.strength && zombie.x > ability.x - blockWidth*ability.strength &&
-                                zombie.y < ability.y + blockHeight*ability.strength && zombie.y > ability.y - blockHeight*ability.strength)
+                        if (ability.name.equals("Black Hole"))
                         {
-                            zombie.x += (ability.x/blockWidth - zombie.x/blockWidth)*blockWidth/ability.ttl/30;
-                            zombie.y += (ability.y/blockHeight - zombie.y/blockHeight)*blockHeight/ability.ttl/30;
-                            zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, true);
-                            zombie.health -= 1;
+                            if (building.x < ability.x + blockWidth*ability.range && building.x > ability.x - blockWidth*ability.range &&
+                                    building.y < ability.y + blockHeight*ability.range && building.y > ability.y - blockHeight*ability.range)
+                            {
+                                Random rand = new Random();
+                                int newX = rand.nextInt(ability.range*2) - ability.range + 1;
+                                int newY = rand.nextInt(ability.range*2) - ability.range + 1;
+
+                                gameBoard[building.x/blockWidth][building.y/blockHeight] = 0;
+                                gameBoard[building.x/blockWidth + newX][building.y/blockHeight + newY] = 1;
+
+
+                                building.x = (ability.x/blockWidth+newX)*blockWidth;
+                                building.y = (ability.y/blockHeight+newY)*blockHeight;
+
+                                mapHasChanged = true;
+                            }
+                        }
+                        if (ability.name.equals("Warp Hammer"))
+                        {
+                            if (building.x < ability.x + blockWidth*ability.range && building.x > ability.x - blockWidth*ability.range &&
+                                    building.y < ability.y + blockHeight*ability.range && building.y > ability.y - blockHeight*ability.range)
+                            {
+                                buildingList.remove(building);
+                                mapHasChanged = true;
+                            }
                         }
                     }
-                    if (ability.name.equals("Black Hole"))
+
+                    for (ZombieSprite zombie : zombieList)
                     {
-                        if (zombie.x < ability.x + blockWidth*ability.strength && zombie.x > ability.x - blockWidth*ability.strength &&
-                                zombie.y < ability.y + blockHeight*ability.strength && zombie.y > ability.y - blockHeight*ability.strength)
+                        if (ability.name.equals("Stasis"))
                         {
-                            zombie.x += (ability.x/blockWidth - zombie.x/blockWidth)*blockWidth;
-                            zombie.y += (ability.y/blockHeight - zombie.y/blockHeight)*blockHeight;
-                            zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, true);
-                            zombie.health -= 1;
+                            if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
+                                    zombie.y < ability.y + blockHeight*ability.range && zombie.y > ability.y - blockHeight*ability.range)
+                            {
+                                zombie.x += (ability.x/blockWidth - zombie.x/blockWidth)*blockWidth/ability.ttl/30;
+                                zombie.y += (ability.y/blockHeight - zombie.y/blockHeight)*blockHeight/ability.ttl/30;
+                                zombie.health -= 1 *ability.strength;
+                            }
                         }
+                        if (ability.name.equals("Black Hole"))
+                        {
+                            if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
+                                    zombie.y < ability.y + blockHeight*ability.range && zombie.y > ability.y - blockHeight*ability.range)
+                            {
+                                Random rand = new Random();
+                                int newX = rand.nextInt(ability.range*2) - ability.range + 1;
+                                int newY = rand.nextInt(ability.range*2) - ability.range + 1;
+
+                                gameBoard[zombie.x/blockWidth][zombie.y/blockHeight] = 0;
+                                gameBoard[zombie.x/blockWidth + newX][zombie.y/blockHeight + newY] = 1;
+                                zombie.x = (ability.x/blockWidth+newX)*blockWidth;
+                                zombie.y = (ability.y/blockHeight+newY)*blockHeight;
+                                zombie.health -= 50*ability.strength;
+                                mapHasChanged = true;
+                            }
+                        }
+
+                        if (ability.name.equals("Warp Hammer"))
+                        {
+                            if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
+                                    zombie.y < ability.y + blockHeight*ability.range && zombie.y > ability.y - blockHeight*ability.range)
+                            {
+
+                                zombie.health -= ability.strength;
+                                mapHasChanged = true;
+                            }
+                        }
+                        if (ability.name.contains("Collect Bodies"))
+                        {
+                            if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
+                                    zombie.y < ability.y + blockHeight*ability.range && zombie.y > ability.y - blockHeight*ability.range)
+                            {
+                                if (zombie.health < 0)
+                                {
+                                    zombieList.remove(zombie);
+                                    bodies++;
+                                    generateZombies();
+                                }
+                            }
+                        }
+
+                        if (zombie.health < 0)
+                        {
+                            zombie.image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.splatter_1),
+                                    blockWidth, blockHeight, true);
+                        }
+                        if (zombie.update(gameBoard, warpX, warpY, width/blockWidth, height/blockHeight, mapHasChanged) == -1)
+                        {
+                            zombieList.remove(zombie);
+                        }
+                        generateZombies();
                     }
                 }
             }
         }
+
+        mapHasChanged = false;
 
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent evt) {
         if (evt.getAction() == MotionEvent.ACTION_DOWN && abilityPress) {
-            System.out.println("SPOTCHECK: " + evt.getX());
-            abilityList.add(new Ability(abilityCalled, (int)evt.getX(), (int)evt.getY(), 3, this));
+            if (abilityCalled.equals("Black Hole"))
+            {
+                abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.black_hole_ability), 2*blockWidth, 2*blockHeight, true),
+                        abilityCalled, (int)evt.getX(), (int)evt.getY(), 2, 2, this));
+            }
+            else if (abilityCalled.equals("Stasis"))
+            {
+                abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.stasis), 2*blockWidth, 2*blockHeight, true),
+                        abilityCalled, (int)evt.getX(), (int)evt.getY(), 2, 2, this));
+            }
+            else if (abilityCalled.contains("Collect Bodies"))
+            {
+                abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.collect_bodies), 2*blockWidth, 2*blockHeight, true),
+                        abilityCalled, (int)evt.getX(), (int)evt.getY(), 2, 2,  this));
+            }
+
+
             abilityPress = false;
             thread.paused = false;
             return true;
@@ -293,12 +441,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         zombieList = new ArrayList<ZombieSprite>();
         abilityList = new ArrayList<Ability>();
 
+        warpBar = findViewById(R.id.warpBar);
+
         maxZombies = 50;
 
         bg = generateBackground();
         gameBoard = generateStartingBoard();
         generateWarpEngine();
         generateZombies();
+        generateCharacters();
     }
 
     @Override
@@ -326,9 +477,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
                 i.draw(canvas);
             }
 
+            for (Ability ability : abilityList)
+            {
+                ability.draw(canvas);
+            }
+
             for (ZombieSprite i : zombieList)
             {
                 i.draw(canvas);
+            }
+
+            for (CharacterSprite character : characterList)
+            {
+                character.draw(canvas);
             }
 
             warpEngine.draw(canvas);

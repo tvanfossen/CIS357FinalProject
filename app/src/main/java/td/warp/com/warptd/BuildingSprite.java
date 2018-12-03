@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 public class BuildingSprite {
 
     private Bitmap image;
-    private int x, y;
+    public int x, y;
 
     public BuildingSprite(Bitmap bmp, int x, int y) {
 
@@ -22,6 +22,6 @@ public class BuildingSprite {
 
     public void update()
     {
-        y++;
+        ;
     }
 }
