@@ -31,6 +31,8 @@ public class Ability {
             case "Black Hole":
                 ttl=1*1;
                 break;
+            case "Gravity Shift":
+                ttl=30*15;
             default:
                 ttl=30*1;
                 break;

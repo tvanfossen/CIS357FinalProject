@@ -2,6 +2,7 @@ package td.warp.com.warptd;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -56,6 +57,12 @@ public class GameActivity extends Activity {
         warpBar = findViewById(R.id.warpBar);
         warpBar.setProgress(0);
 
+        Button endRoundButton = new Button(this);
+        Button shareButton = new Button(this);
+        endRoundButton.setText("End Round!");
+        shareButton.setText("Share to Facebook");
+
+
 
         ability1.setText("Collect Bodies 1");
         ability2.setText("Return 1");
@@ -68,8 +75,41 @@ public class GameActivity extends Activity {
                 gv.thread.paused = true;
                 gv.abilityPress = true;
                 gv.abilityCalled = ability1.getText().toString();
-
+                
                 warpBar.setProgress(gv.bodies);
+                warpBar.setMax(gv.maxZombies);
+
+                if (warpBar.getProgress() >= warpBar.getMax())
+                {
+                    System.out.println("END ROUND");
+
+                    Button endRoundButton = new Button(context);
+                    Button shareButton = new Button(context);
+                    endRoundButton.setText("End Round!");
+                    shareButton.setText("Share to Facebook");
+
+                    LinearLayout layout = (LinearLayout)findViewById(R.id.gamelayout);
+
+                    layout.removeAllViews();
+                    layout.addView(endRoundButton);
+                    layout.addView(shareButton);
+
+                    endRoundButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Intent data = new Intent();
+                            data.putExtra("biomass", 2*gv.bodies);
+                            data.putExtra("kills", gv.bodies);
+                            setResult(2, data);
+                            finish();
+                        }
+                    });
+                    shareButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+
+                            finish();
+                        }
+                    });
+                }
 
             }
         });
@@ -113,6 +153,39 @@ public class GameActivity extends Activity {
                             gv.abilityCalled = ability1.getText().toString();
 
                             warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            if (warpBar.getProgress() >= warpBar.getMax())
+                            {
+                                System.out.println("END ROUND");
+
+                                Button endRoundButton = new Button(context);
+                                Button shareButton = new Button(context);
+                                endRoundButton.setText("End Round!");
+                                shareButton.setText("Share to Facebook");
+
+                                LinearLayout layout = (LinearLayout)findViewById(R.id.gamelayout);
+
+                                layout.removeAllViews();
+                                layout.addView(endRoundButton);
+                                layout.addView(shareButton);
+
+                                endRoundButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent data = new Intent();
+                                        data.putExtra("biomass", 2*gv.bodies);
+                                        data.putExtra("kills", gv.bodies);
+                                        setResult(2, data);
+                                        finish();
+                                    }
+                                });
+                                shareButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        finish();
+                                    }
+                                });
+                            }
 
                         }
                     });
@@ -152,6 +225,39 @@ public class GameActivity extends Activity {
                             gv.abilityCalled = ability1.getText().toString();
 
                             warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            if (warpBar.getProgress() >= warpBar.getMax())
+                            {
+                                System.out.println("END ROUND");
+
+                                Button endRoundButton = new Button(context);
+                                Button shareButton = new Button(context);
+                                endRoundButton.setText("End Round!");
+                                shareButton.setText("Share to Facebook");
+
+                                LinearLayout layout = (LinearLayout)findViewById(R.id.gamelayout);
+
+                                layout.removeAllViews();
+                                layout.addView(endRoundButton);
+                                layout.addView(shareButton);
+
+                                endRoundButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent data = new Intent();
+                                        data.putExtra("biomass", 2*gv.bodies);
+                                        data.putExtra("kills", gv.bodies);
+                                        setResult(2, data);
+                                        finish();
+                                    }
+                                });
+                                shareButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        finish();
+                                    }
+                                });
+                            }
 
                         }
                     });
@@ -191,6 +297,42 @@ public class GameActivity extends Activity {
                             gv.abilityCalled = ability1.getText().toString();
 
                             warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            if (warpBar.getProgress() >= warpBar.getMax())
+                            {
+                                System.out.println("END ROUND");
+
+                                Button endRoundButton = new Button(context);
+                                Button shareButton = new Button(context);
+                                endRoundButton.setText("End Round!");
+                                shareButton.setText("Share to Facebook");
+
+                                LinearLayout layout = (LinearLayout)findViewById(R.id.gamelayout);
+
+                                layout.removeAllViews();
+                                layout.addView(endRoundButton);
+                                layout.addView(shareButton);
+
+                                endRoundButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent data = new Intent();
+                                        data.putExtra("biomass", 2*gv.bodies);
+                                        data.putExtra("kills", gv.bodies);
+                                        setResult(2, data);
+                                        finish();
+                                    }
+                                });
+                                shareButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        finish();
+                                    }
+                                });
+                            }
 
                         }
                     });
@@ -228,7 +370,44 @@ public class GameActivity extends Activity {
                             gv.thread.paused = true;
                             gv.abilityPress = true;
                             gv.abilityCalled = ability1.getText().toString();
+
                             warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            warpBar.setProgress(gv.bodies);
+                            warpBar.setMax(gv.maxZombies);
+
+                            if (warpBar.getProgress() >= warpBar.getMax())
+                            {
+                                System.out.println("END ROUND");
+
+                                Button endRoundButton = new Button(context);
+                                Button shareButton = new Button(context);
+                                endRoundButton.setText("End Round!");
+                                shareButton.setText("Share to Facebook");
+
+                                LinearLayout layout = (LinearLayout)findViewById(R.id.gamelayout);
+
+                                layout.removeAllViews();
+                                layout.addView(endRoundButton);
+                                layout.addView(shareButton);
+
+                                endRoundButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent data = new Intent();
+                                        data.putExtra("biomass", 2*gv.bodies);
+                                        data.putExtra("kills", gv.bodies);
+                                        setResult(2, data);
+                                        finish();
+                                    }
+                                });
+                                shareButton.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        finish();
+                                    }
+                                });
+                            }
 
                         }
                     });

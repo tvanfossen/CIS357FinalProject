@@ -29,7 +29,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
     public List<Ability> abilityList;
     private WarpEngineSprite warpEngine;
     private int blockHeight, blockWidth;
-    private int maxZombies;
+    public int maxZombies;
     private int warpX, warpY;
     private boolean mapHasChanged = false;
     public String abilityCalled = "";
@@ -60,6 +60,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
         gravX = event.values[0];
         gravY = event.values[1];
         gravZ = event.values[2];
+
+//        System.out.println("SPOTCHECK: " + gravX + " : " + gravY);
 
 
         if (abilityCalled.equals("Warp Hammer") && abilityPress)
@@ -303,6 +305,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
                                 mapHasChanged = true;
                             }
                         }
+
+                        if (ability.name.equals("Gravity Shift"))
+                        {
+                            if (building.x < ability.x + blockWidth*ability.range && building.x > ability.x - blockWidth*ability.range &&
+                                    building.y < ability.y + blockHeight*ability.range && building.y > ability.y - blockHeight*ability.range)
+                            {
+
+
+                                gameBoard[building.x/blockWidth][building.y/blockHeight] = 0;
+                                gameBoard[building.x/blockWidth + (int)gravX/3][building.y/blockHeight + (int)gravY/3] = 1;
+
+                                building.x = (building.x/blockWidth + (int)gravX/3) *blockWidth;
+                                building.y = (building.y/blockHeight + (int)gravY/3) *blockHeight;
+
+                                mapHasChanged = true;
+                            }
+                        }
+
                         if (ability.name.equals("Warp Hammer"))
                         {
                             if (building.x < ability.x + blockWidth*ability.range && building.x > ability.x - blockWidth*ability.range &&
@@ -312,6 +332,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
                                 mapHasChanged = true;
                             }
                         }
+
+
                     }
 
                     for (ZombieSprite zombie : zombieList)
@@ -354,6 +376,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
                                 mapHasChanged = true;
                             }
                         }
+
+                        if (ability.name.equals("Gravity Shift"))
+                        {
+                            if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
+                                    zombie.y < ability.y + blockHeight*ability.range && zombie.y > ability.y - blockHeight*ability.range)
+                            {
+
+                                zombie.health -= ability.strength;
+                                zombie.x = (zombie.x/blockWidth + (int)gravX/3) *blockWidth;
+                                zombie.y = (zombie.y/blockHeight + (int)gravY/3) *blockHeight;
+
+                                mapHasChanged = true;
+                            }
+                        }
                         if (ability.name.contains("Collect Bodies"))
                         {
                             if (zombie.x < ability.x + blockWidth*ability.range && zombie.x > ability.x - blockWidth*ability.range &&
@@ -367,7 +403,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
                                 }
                             }
                         }
-
                         if (zombie.health < 0)
                         {
                             zombie.image = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.splatter_1),
@@ -405,6 +440,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
                 abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.collect_bodies), 2*blockWidth, 2*blockHeight, true),
                         abilityCalled, (int)evt.getX(), (int)evt.getY(), 2, 2,  this));
             }
+            else if (abilityCalled.equals("Gravity Shift"))
+            {
+                abilityList.add(new Ability(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.stasis), 6*blockWidth, 6*blockHeight, true),
+                        abilityCalled, (int)evt.getX(), (int)evt.getY(), 2, 6, this));
+            }
 
 
             abilityPress = false;
@@ -438,7 +478,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Sen
 
         warpBar = findViewById(R.id.warpBar);
 
-        maxZombies = 50;
+        maxZombies = 20;
 
         bg = generateBackground();
         gameBoard = generateStartingBoard();

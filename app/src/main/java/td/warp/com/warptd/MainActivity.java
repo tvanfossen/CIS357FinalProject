@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int GAME_ACTIVITY_CODE = 0;
-
     private static final String TAG = "FireLog";
     public Button gameButton;
     public Button signOutButton;
@@ -58,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     private UserStatsAdapter userStatsAdapter;
     private AchievementsAdapter achievementsAdapter;
+
+    private int RESULT_WIN = 2;
+    private int GAME_CODE = 1;
+    private int RESULT_LOSS = 3;
 
 
 
@@ -199,39 +201,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent game = new Intent(getApplicationContext(), GameActivity.class);
-                startActivityForResult(game, GAME_ACTIVITY_CODE);
+                startActivityForResult(game, GAME_CODE);
 
             }
         });
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GAME_CODE) {
+            if (resultCode == RESULT_WIN) {
+                int biomass = 0;
+                int bodies = 0;
+                data.getIntExtra("biomass", biomass);
+                data.getIntExtra("bodies", bodies);
 
-    /**************************************************************************
-     *
-     * Need to add intent putExtra in game activity to return kills and bodies
-     * Wins and warps can just be incremented for now.
-     *
-     **************************************************************************/
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode, data);
-
-        if (requestCode == GAME_ACTIVITY_CODE){
-            if (requestCode == RESULT_OK){
-                int returnKills = data.getIntExtra("kills",0);
-                int returnBioMass = data.getIntExtra("bodies",0);
-                mUser.setBiomass(mUser.getBiomass()+returnBioMass);
-                mUser.setKills(mUser.getKills()+returnKills);
-                mUser.setWarps(mUser.getWarps()+1);
-                mUser.setWins(mUser.getWins()+1);
-
+            }
+            else if(resultCode == RESULT_LOSS)
+            {
 
             }
         }
     }
-
-    /******************************************************************************/
 
 
     private void purchaseDamage() {
