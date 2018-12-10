@@ -208,17 +208,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        UserInfo user = userInfo.get(0);
         if (requestCode == GAME_CODE) {
             if (resultCode == RESULT_WIN) {
-                int biomass = 0;
-                int bodies = 0;
-                data.getIntExtra("biomass", biomass);
-                data.getIntExtra("bodies", bodies);
+
+
+                int biomass = data.getIntExtra("biomass", 0);
+                int bodies = data.getIntExtra("kills", 0);
+                user.setBiomass(mUser.getBiomass()+biomass);
+                user.setKills(mUser.getKills()+bodies);
+                user.setWarps(mUser.getWarps()+1);
+                user.setWins(mUser.getWins()+1);
+                updateUserInfo();
 
             }
             else if(resultCode == RESULT_LOSS)
             {
 
+
+                int biomass = data.getIntExtra("biomass", 0);
+                int bodies = data.getIntExtra("kills", 0);
+                user.setBiomass(mUser.getBiomass()+biomass);
+                user.setKills(mUser.getKills()+bodies);
+                updateUserInfo();
             }
         }
     }
@@ -320,35 +332,66 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         //updating games played
-//        userRef
-//                .update("gamesPlayed", "" + user.getGamesPlayed())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error updating document", e);
-//                    }
-//                });
-//
-//        //updating kills
-//        userRef
-//                .update("kills", "" + user.getKills())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error updating document", e);
-//                    }
-//                });
+        userRef
+                .update("gamesPlayed", "" + user.getGamesPlayed())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        //updating wins
+        userRef
+                .update("wins", "" + user.getWins())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        userRef
+                .update("warps", "" + user.getWarps())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
+        //updating kills
+        userRef
+                .update("kills", "" + user.getKills())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 }

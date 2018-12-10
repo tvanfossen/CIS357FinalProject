@@ -118,37 +118,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (user != null) {
 
 
-            FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
-            Map<String, Object> newUser = new HashMap<>();
-            Map<String, Object> newTower = new HashMap<>();
-
-
-            newUser.put("range", "10");
-            newUser.put("strength", "10");
-            newUser.put("email", authorizedUser.getEmail());
-            newUser.put("kills", "732");
-            newUser.put("biomass", "530");
-            newUser.put("warps", "4");
-            newUser.put("gamesPlayed", "10");
-            newUser.put("wins", "7");
-
-
-            db.collection("users").document(authorizedUser.getUid())
-                    .set(newUser)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot added");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
-                        }
-                    });
-
-
             Intent main = new Intent(getApplicationContext(), MainActivity.class);
             main.putExtra("uid", user);
             startActivity(main);
@@ -165,16 +134,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                                 FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
                                 Map<String, Object> newUser = new HashMap<>();
-                                newUser.put("email", authorizedUser.getEmail());
-                                newUser.put("kills", 0);
-                                newUser.put("corpses harvested", 0);
+                                Map<String, Object> newTower = new HashMap<>();
 
-                                db.collection("users")
-                                        .add(newUser)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+
+                                newUser.put("range", "10");
+                                newUser.put("strength", "10");
+                                newUser.put("email", authorizedUser.getEmail());
+                                newUser.put("kills", "0");
+                                newUser.put("biomass", "0");
+                                newUser.put("warps", "0");
+                                newUser.put("gamesPlayed", "0");
+                                newUser.put("wins", "0");
+
+
+                                db.collection("users").document(authorizedUser.getUid())
+                                        .set(newUser)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "DocumentSnapshot added");
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -294,6 +272,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG2, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                            if (isNew){
+                                setUpNewUserData();
+                            }
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -306,6 +288,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         // ...
                     }
                 });
+    }
+
+
+    //used for setting up new users when they sign up with facebook
+    private void setUpNewUserData(){
+        FirebaseUser authorizedUser = FirebaseAuth.getInstance().getCurrentUser();
+        Map<String, Object> newUser = new HashMap<>();
+        Map<String, Object> newTower = new HashMap<>();
+
+
+        newUser.put("range", "10");
+        newUser.put("strength", "10");
+        newUser.put("email", authorizedUser.getEmail());
+        newUser.put("kills", "0");
+        newUser.put("biomass", "0");
+        newUser.put("warps", "0");
+        newUser.put("gamesPlayed", "0");
+        newUser.put("wins", "0");
+
+
+        db.collection("users").document(authorizedUser.getUid())
+                .set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot added");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
+
+        Log.d(TAG, "signInWithEmail:success");
+        FirebaseUser user = mAuth.getCurrentUser();
+        updateUI(user);
     }
 
 
