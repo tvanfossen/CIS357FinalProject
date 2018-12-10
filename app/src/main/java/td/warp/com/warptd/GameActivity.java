@@ -228,7 +228,6 @@ public class GameActivity extends Activity {
                             gv.thread.paused = true;
                             gv.abilityPress = true;
                             gv.abilityCalled = ability1.getText().toString();
-
                             warpBar.setProgress(gv.bodies);
 
                         }
