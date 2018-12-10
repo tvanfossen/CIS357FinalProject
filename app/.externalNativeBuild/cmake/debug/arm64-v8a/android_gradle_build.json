@@ -2,11 +2,11 @@
 {
 	"buildFiles" : 
 	[
-		"/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/CMakeLists.txt"
+		"/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/CMakeLists.txt"
 	],
 	"cleanCommands" : 
 	[
-		"/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a --target clean"
+		"/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a --target clean"
 	],
 	"cppFileExtensions" : [ "cpp" ],
 	"libraries" : 
@@ -15,27 +15,27 @@
 		{
 			"abi" : "arm64-v8a",
 			"artifactName" : "native-lib",
-			"buildCommand" : "/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a --target native-lib",
+			"buildCommand" : "/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a --target native-lib",
 			"buildType" : "debug",
 			"files" : 
 			[
 				
 				{
-					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/Users/jonnyd_went/Library/Android/sdk/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/jonnyd_went/Library/Android/sdk/ndk-bundle/sysroot  -Dnative_lib_EXPORTS -isystem /Users/jonnyd_went/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -isystem /Users/jonnyd_went/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include  -isystem /Users/jonnyd_went/Library/Android/sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info  -fPIC    -c ",
-					"src" : "/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/src/main/cpp/native-lib.cpp",
-					"workingDirectory" : "/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a"
+					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/home/tvanfossen/Android/Sdk/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64 --sysroot=/home/tvanfossen/Android/Sdk/ndk-bundle/sysroot  -Dnative_lib_EXPORTS -isystem /home/tvanfossen/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -isystem /home/tvanfossen/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include  -isystem /home/tvanfossen/Android/Sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/src/main/cpp/native-lib.cpp",
+					"workingDirectory" : "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/.externalNativeBuild/cmake/debug/arm64-v8a"
 				}
 			],
-			"output" : "/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so",
-			"toolchain" : "1915437651489810309"
+			"output" : "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so",
+			"toolchain" : "11741950425528408194"
 		}
 	},
 	"toolchains" : 
 	{
-		"1915437651489810309" : 
+		"11741950425528408194" : 
 		{
-			"cCompilerExecutable" : "/Users/jonnyd_went/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
-			"cppCompilerExecutable" : "/Users/jonnyd_went/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+			"cCompilerExecutable" : "/home/tvanfossen/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/home/tvanfossen/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
 		}
 	}
 }

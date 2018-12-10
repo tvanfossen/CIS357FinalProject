@@ -1,16 +1,16 @@
 {
   "buildFiles": [
-    "/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/CMakeLists.txt"
+    "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/CMakeLists.txt"
   ],
   "cleanCommands": [
-    "/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/.externalNativeBuild/cmake/release/x86_64 --target clean"
+    "/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/.externalNativeBuild/cmake/release/x86_64 --target clean"
   ],
   "libraries": {
     "native-lib-Release-x86_64": {
       "artifactName": "native-lib",
-      "buildCommand": "/Users/jonnyd_went/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/.externalNativeBuild/cmake/release/x86_64 --target native-lib",
+      "buildCommand": "/home/tvanfossen/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/.externalNativeBuild/cmake/release/x86_64 --target native-lib",
       "abi": "x86_64",
-      "output": "/Users/jonnyd_went/ZombieTDFinal/CIS357FinalProject/app/build/intermediates/cmake/release/obj/x86_64/libnative-lib.so"
+      "output": "/home/tvanfossen/AndroidStudioProjects/CIS357FinalProject/app/build/intermediates/cmake/release/obj/x86_64/libnative-lib.so"
     }
   }
 }
